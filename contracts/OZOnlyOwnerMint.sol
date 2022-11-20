@@ -4,7 +4,7 @@ pragma solidity ^0.8.14;
 
 import "@openzeppelin/contracts@4.6.0/token/ERC721/ERC721.sol";
 
-contract OnlyOwnerMintWithModifier is ERC721 {
+contract OZOnlyOwnerMint is ERC721 {
 
     /**
      * @dev
@@ -12,7 +12,7 @@ contract OnlyOwnerMintWithModifier is ERC721 {
      */
     address public owner;
 
-    constructor() ERC721("OnlyOwnerMintWithModifier", "OWNERMOD") {
+    constructor() ERC721("OZOnlyOwnerMint", "OZNER") {
         owner = _msgSender();
     }
 
