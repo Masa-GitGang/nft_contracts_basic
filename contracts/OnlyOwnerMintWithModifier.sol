@@ -20,7 +20,7 @@ contract OnlyOwnerMintWithModifier is ERC721 {
      * @dev
      * - このコントラクトをデプロイしたアドレスだけに制御するmodifier
      */
-    modifier onlyowner {
+    modifier onlyOwner {
         require(owner == _msgSender(), "Caller is not the owner.");
         _;
     }
@@ -30,7 +30,7 @@ contract OnlyOwnerMintWithModifier is ERC721 {
      * - このコントラクトをデプロイしたアドレスだけがmint可能 onlyowner
      * - nftMint関数の実行アドレスにtokenIdを紐づけ
      */
-    function nftMint(uint256 tokenId) public onlyowner{
+    function nftMint(uint256 tokenId) public onlyOwner{
         _mint(_msgSender(), tokenId);
     }
 }
