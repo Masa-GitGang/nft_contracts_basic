@@ -5,8 +5,18 @@ pragma solidity ^0.8.14;
 import "@openzeppelin/contracts@4.6.0/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts@4.6.0/access/Ownable.sol";
 import "@openzeppelin/contracts@4.6.0/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts@4.6.0/utils/Counters.sol";
+import "@openzeppelin/contracts@4.6.0/utils/Strings.sol";
+
 
 contract CounterNFT is ERC721URIStorage, Ownable {
+
+    /**
+     * @dev
+     * - _tokenIdsはCountersの全関数が利用可能
+     */
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
     /**
      * @dev
@@ -19,13 +29,29 @@ contract CounterNFT is ERC721URIStorage, Ownable {
     /**
      * @dev
      * - このコントラクトをデプロイしたアドレスだけがmint可能 onlyowner
+     * - tokenIdをインクリメント _tokenIds.increment()
      * - nftMint関数の実行アドレス(=デプロイアドレス)にtokenIdを紐づけ _msgSender()
      * = mintの際にURIを設定 _setTokenURI()
      * = EVENT発火 emit TokenURIChanged
      */
-    function nftMint(uint256 tokenId, string calldata uri) public onlyOwner{
-        _mint(_msgSender(), tokenId);
-        _setTokenURI(tokenId, uri);
-        emit TokenURIChanged(_msgSender(), tokenId, uri);
+    function nftMint() public onlyOwner{
+        _tokenIds.increment();
+        uint256 newTokenId = _tokenIds.current();
+
+        _mint(_msgSender(), newTokenId);
+
+        string memory jsonFile = string (abi.encodePacked('metadata', Strings.toString(newTokenId), '.json'));
+        _setTokenURI(newTokenId, jsonFile);
+
+        emit TokenURIChanged(_msgSender(), newTokenId, jsonFile);
     }
+
+    /**
+     * @dev
+     * = URIプレフィックスの設定
+     */
+    function _baseURI() internal pure override returns (string memory) {
+        return "ipfs://bafybeifbu2pv37cvxmbddv45gm7ucpds3lu3rwy63qzb2332z4d7x3xyya/";
+    }
+
 }
