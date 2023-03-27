@@ -9,12 +9,12 @@ interface Bank{
     function withdraw(uint _amount) external;
 }
 
-contract oioi{
+contract oio{
 
 } 
 
 contract Attack{
-    oioi jiji;
+    oio jiji;
     Bank bank;
     uint sentAmount;
     uint i;
